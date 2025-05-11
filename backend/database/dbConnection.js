@@ -1,14 +1,18 @@
 import mongoose from "mongoose";
 
 export const dbConnection = () => {
-  mongoose
-    .connect(process.env.MONGO_URI, {
-      dbName: "RESERVATIONS",
-    })
-    .then(() => {
-      console.log("Connected to database!");
-    })
-    .catch((err) => {
-      console.log(`Some error occured while connecing to database: ${err}`);
-    });
+  const uri = process.env.MONGO_URI;
+
+  if (!uri) {
+    console.error("❌ MONGO_URI is not defined in .env file");
+    process.exit(1);
+  }
+
+  mongoose.connect(uri, {
+    dbName: "RESERVATIONS", // Optional if db name not in URI
+  }).then(() => {
+    console.log("✅ MongoDB connected successfully!");
+  }).catch((err) => {
+    console.error("❌ Error while connecting to database:", err);
+  });
 };
